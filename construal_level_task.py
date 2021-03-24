@@ -83,7 +83,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
 
     # Setup the Window
     win = visual.Window(
-        size=[1280, 720], fullscr=False, screen=0,
+        size=[2560, 1440], fullscr=True, screen=0,
         winType='pyglet', allowGUI=False, allowStencil=False,
         monitor='testMonitor', color=[-1,-1,-1], colorSpace='rgb',
         blendMode='avg', useFBO=True,
