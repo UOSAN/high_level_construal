@@ -725,7 +725,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
             continueRoutine = True
             routineTimer.add(4.000000)
             # update component parameters for each repeat
-            scenario_cue_text.setText("Please imagine the next events occurring " + thisBlock['cue_text'])
+            scenario_cue_text.setText("Consider the thoughts that would go through your mind if you are in the following situation\n" + thisBlock['cue_text'])
             # keep track of which components have finished
             scenario_cueComponents = [scenario_cue_text]
             for thisComponent in scenario_cueComponents:
@@ -1033,11 +1033,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
             continueRoutine = True
             routineTimer.add(5.000000)
             # update component parameters for each repeat
-            if thisBlock['condition_type'] == 'present':
-                quitting_intention_str = 'Consider the thoughts that would go through your mind if you were in this situation right now.\n\nTo what extent do these thoughts encourage or discourage you to smoke?'
-            else:
-                quitting_intention_str = 'Consider the thoughts that would go through your mind if you are in this situation five years from now.\n\nTo what extent do these thoughts encourage or discourage you to smoke?'
-            quitting_intention_text.setText(quitting_intention_str)
+            quitting_intention_text.setText(thisBlock['cue_text'] + '\n\nTo what extent do your thoughts encourage or discourage you to smoke?')
             quitting_intention_rating.reset()
             quitting_intention_keyboard.keys = []
             quitting_intention_keyboard.rt = []
