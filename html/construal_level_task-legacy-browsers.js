@@ -20,6 +20,66 @@ let expName = 'construal_level_task';  // from the Builder filename that created
 let expInfo = {'participant': '', 'session': '', 'run_number': '1'};
 
 // Start code blocks for 'Before Experiment'
+var _pj;
+var conditions_file_name;
+var is_first;
+var start_text_str;
+var start_text_duration;
+var end_text_str;
+var end_text_duration;
+var scenario_trials_selection;
+var action_trials_selection;
+var rating_keys;
+
+function _pj_snippets(container) {
+    function in_es6(left, right) {
+        if (((right instanceof Array) || ((typeof right) === "string"))) {
+            return (right.indexOf(left) > (- 1));
+        } else {
+            if (((right instanceof Map) || (right instanceof Set) || (right instanceof WeakMap) || (right instanceof WeakSet))) {
+                return right.has(left);
+            } else {
+                return (left in right);
+            }
+        }
+    }
+    container["in_es6"] = in_es6;
+    return container;
+}
+_pj = {};
+_pj_snippets(_pj);
+conditions_file_name = "choose_condition.csv";
+
+is_first = false;
+if (is_first) {
+    start_text_str = "Calibrating scanner";
+    start_text_duration = 120;
+    end_text_str = "The task has ended. The next task will start in a few seconds.";
+    end_text_duration = 10;
+} else {
+    start_text_str = "";
+    start_text_duration = 0.1;
+    end_text_str = "The task has ended. Waiting for researcher to start next task.";
+    end_text_duration = 120;
+}
+if ((expInfo["session"] === "0")) {
+    conditions_file_name = "choose_condition_practice.csv";
+    scenario_trials_selection = [0];
+    action_trials_selection = [0, 1, 2];
+    start_text_str = "Practice for construal level task";
+}
+rating_keys = ["5", "6", "7", "8", "9"];
+
+function convert_key_to_rating(key) {
+    var rating;
+    rating = null;
+    if (_pj.in_es6(key, rating_keys)) {
+        rating = Number.parseInt(key);
+        rating = (rating - 4);
+    }
+    return rating;
+}
+
 // schedule the experiment:
 psychoJS.schedule(psychoJS.gui.DlgFromDict({
   dictionary: expInfo,
@@ -77,7 +137,6 @@ function download_audio_resources(trial_list) {
   psychoJS.downloadResources(audio_files);
 }
 
-
 var frameDur;
 function updateInfo() {
   expInfo['date'] = util.MonotonicClock.getDateStr();  // add a simple timestamp
@@ -98,47 +157,8 @@ function updateInfo() {
   return Scheduler.Event.NEXT;
 }
 
-var _pj;
-function _pj_snippets(container) {
-    function in_es6(left, right) {
-        if (((right instanceof Array) || ((typeof right) === "string"))) {
-            return (right.indexOf(left) > (- 1));
-        } else {
-            if (((right instanceof Map) || (right instanceof Set) || (right instanceof WeakMap) || (right instanceof WeakSet))) {
-                return right.has(left);
-            } else {
-                return (left in right);
-            }
-        }
-    }
-    container["in_es6"] = in_es6;
-    return container;
-}
-_pj = {};
-_pj_snippets(_pj);
-
-rating_keys = ["5", "6", "7", "8", "9"];
-function convert_key_to_rating(key) {
-    var rating;
-    rating = null;
-    if (_pj.in_es6(key, rating_keys)) {
-        rating = Number.parseInt(key);
-        rating = (rating - 4);
-    }
-    return rating;
-}
 
 var setupClock;
-var _pj;
-var conditions_file_name;
-var is_first;
-var start_text_str;
-var start_text_duration;
-var end_text_str;
-var end_text_duration;
-var scenario_trials_selection;
-var action_trials_selection;
-var rating_keys;
 var instructionsClock;
 var instruction;
 var key_resp;
@@ -167,33 +187,12 @@ var quitting_intention_rating;
 var quitting_intention_keyboard;
 var endClock;
 var end_text;
+var end_key_resp;
 var globalClock;
 var routineTimer;
 function experimentInit() {
   // Initialize components for Routine "setup"
   setupClock = new util.Clock();
-  conditions_file_name = "choose_condition.csv";
-  
-  is_first = false;
-  if (is_first) {
-      start_text_str = "Calibrating scanner";
-      start_text_duration = 120;
-      end_text_str = "The task has ended. The next task will start in a few seconds.";
-      end_text_duration = 10;
-  } else {
-      start_text_str = "";
-      start_text_duration = 0.1;
-      end_text_str = "";
-      end_text_duration = 0.1;
-  }
-  if ((expInfo["session"] === "0")) {
-      conditions_file_name = "choose_condition_practice.csv";
-      scenario_trials_selection = [0];
-      action_trials_selection = [0, 1, 2];
-      start_text_str = "Practice for construal level task";
-  }
-
-  
   // Initialize components for Routine "instructions"
   instructionsClock = new util.Clock();
   instruction = new visual.TextStim({
@@ -367,6 +366,8 @@ function experimentInit() {
     color: new util.Color('white'),  opacity: undefined,
     depth: 0.0 
   });
+  
+  end_key_resp = new core.Keyboard({psychoJS: psychoJS, clock: new util.Clock(), waitForStart: true});
   
   // Create some handy timers
   globalClock = new util.Clock();  // to track the time since experiment started
@@ -702,6 +703,8 @@ function blockLoopEnd() {
 }
 
 
+var scenario_trials_selection;
+var action_trials_selection;
 var block_setupComponents;
 function block_setupRoutineBegin(snapshot) {
   return function () {
@@ -1040,7 +1043,7 @@ function scenario_cueRoutineBegin(snapshot) {
     continueRoutine = true; // until we're told otherwise
     routineTimer.add(4.000000);
     // update component parameters for each repeat
-    scenario_cue_text.setText(("Please imagine the next events occurring " + cue_text));
+    scenario_cue_text.setText(("Consider the thoughts that would go through your mind if you are in the following situation\n" + cue_text));
     // keep track of which components have finished
     scenario_cueComponents = [];
     scenario_cueComponents.push(scenario_cue_text);
@@ -1436,7 +1439,6 @@ function scenario3RoutineEnd(snapshot) {
 }
 
 
-var quitting_intention_str;
 var _quitting_intention_keyboard_allKeys;
 var quitting_intentionComponents;
 function quitting_intentionRoutineBegin(snapshot) {
@@ -1448,13 +1450,7 @@ function quitting_intentionRoutineBegin(snapshot) {
     continueRoutine = true; // until we're told otherwise
     routineTimer.add(5.000000);
     // update component parameters for each repeat
-    if ((condition_type === "present")) {
-        quitting_intention_str = "Consider the thoughts that would go through your mind if you were in this situation right now.\n\nTo what extent do these thoughts encourage or discourage you to smoke?";
-    } else {
-        quitting_intention_str = "Consider the thoughts that would go through your mind if you are in this situation five years from now.\n\nTo what extent do these thoughts encourage or discourage you to smoke?";
-    }
-    
-    quitting_intention_text.setText(quitting_intention_str);
+    quitting_intention_text.setText((cue_text + "\n\nTo what extent do your thoughts encourage or discourage you to smoke?"));
     quitting_intention_rating.reset()
     quitting_intention_keyboard.keys = undefined;
     quitting_intention_keyboard.rt = undefined;
@@ -1588,6 +1584,7 @@ function quitting_intentionRoutineEnd(snapshot) {
 }
 
 
+var _end_key_resp_allKeys;
 var endComponents;
 function endRoutineBegin(snapshot) {
   return function () {
@@ -1597,9 +1594,13 @@ function endRoutineBegin(snapshot) {
     frameN = -1;
     continueRoutine = true; // until we're told otherwise
     // update component parameters for each repeat
+    end_key_resp.keys = undefined;
+    end_key_resp.rt = undefined;
+    _end_key_resp_allKeys = [];
     // keep track of which components have finished
     endComponents = [];
     endComponents.push(end_text);
+    endComponents.push(end_key_resp);
     
     endComponents.forEach( function(thisComponent) {
       if ('status' in thisComponent)
@@ -1631,6 +1632,35 @@ function endRoutineEachFrame(snapshot) {
     if (end_text.status === PsychoJS.Status.STARTED && t >= frameRemains) {
       end_text.setAutoDraw(false);
     }
+    
+    // *end_key_resp* updates
+    if (t >= 0.0 && end_key_resp.status === PsychoJS.Status.NOT_STARTED) {
+      // keep track of start time/frame for later
+      end_key_resp.tStart = t;  // (not accounting for frame time here)
+      end_key_resp.frameNStart = frameN;  // exact frame index
+      
+      // keyboard checking is just starting
+      psychoJS.window.callOnFlip(function() { end_key_resp.clock.reset(); });  // t=0 on next screen flip
+      psychoJS.window.callOnFlip(function() { end_key_resp.start(); }); // start on screen flip
+      psychoJS.window.callOnFlip(function() { end_key_resp.clearEvents(); });
+    }
+
+    frameRemains = 0.0 + asarray(end_text_duration) - psychoJS.window.monitorFramePeriod * 0.75;  // most of one frame period left
+    if (end_key_resp.status === PsychoJS.Status.STARTED && t >= frameRemains) {
+      end_key_resp.status = PsychoJS.Status.FINISHED;
+  }
+
+    if (end_key_resp.status === PsychoJS.Status.STARTED) {
+      let theseKeys = end_key_resp.getKeys({keyList: ['space'], waitRelease: false});
+      _end_key_resp_allKeys = _end_key_resp_allKeys.concat(theseKeys);
+      if (_end_key_resp_allKeys.length > 0) {
+        end_key_resp.keys = _end_key_resp_allKeys[_end_key_resp_allKeys.length - 1].name;  // just the last key pressed
+        end_key_resp.rt = _end_key_resp_allKeys[_end_key_resp_allKeys.length - 1].rt;
+        // a response ends the routine
+        continueRoutine = false;
+      }
+    }
+    
     // check for quit (typically the Esc key)
     if (psychoJS.experiment.experimentEnded || psychoJS.eventManager.getKeys({keyList:['escape']}).length > 0) {
       return quitPsychoJS('The [Escape] key was pressed. Goodbye!', false);
@@ -1666,6 +1696,13 @@ function endRoutineEnd(snapshot) {
         thisComponent.setAutoDraw(false);
       }
     });
+    psychoJS.experiment.addData('end_key_resp.keys', end_key_resp.keys);
+    if (typeof end_key_resp.keys !== 'undefined') {  // we had a response
+        psychoJS.experiment.addData('end_key_resp.rt', end_key_resp.rt);
+        routineTimer.reset();
+        }
+    
+    end_key_resp.stop();
     // the Routine "end" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset();
     
