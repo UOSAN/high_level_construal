@@ -564,9 +564,9 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                 routineTimer.add(5.000000)
                 # update component parameters for each repeat
                 if thisBlock['condition_type'] == 'present':
-                    attention_check_text = 'How often do you currently engage in this action?'
+                    attention_check_text = 'How often do you engage in this action\nRIGHT NOW?'
                 else:
-                    attention_check_text = 'How likely would you engage in this action five years from now?'
+                    attention_check_text = 'How likely would you engage in this action\nFIVE YEARS FROM NOW?'
                 action_text.setText(thisAction_trial['action'])
                 attention_check.setText(attention_check_text)
                 attention_check_rating.reset()
@@ -1033,7 +1033,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
             continueRoutine = True
             routineTimer.add(5.000000)
             # update component parameters for each repeat
-            quitting_intention_text.setText(thisBlock['cue_text'] + '\n\nTo what extent do your thoughts encourage or discourage you to smoke?')
+            quitting_intention_text.setText(thisBlock['cue_text'] + '\n\nHow much would you encourage or discourage yourself to smoke in this situation?')
             quitting_intention_rating.reset()
             quitting_intention_keyboard.keys = []
             quitting_intention_keyboard.rt = []

@@ -882,9 +882,9 @@ function actionRoutineBegin(snapshot) {
     routineTimer.add(5.000000);
     // update component parameters for each repeat
     if ((condition_type === "present")) {
-        attention_check_text = "How often do you currently engage in this action?";
+        attention_check_text = "How often do you engage in this action\nRIGHT NOW?";
     } else {
-        attention_check_text = "How likely would you engage in this action five years from now?";
+        attention_check_text = "How likely would you engage in this action\nFIVE YEARS FROM NOW?";
     }
     
     action_text.setText(action);
@@ -1450,7 +1450,7 @@ function quitting_intentionRoutineBegin(snapshot) {
     continueRoutine = true; // until we're told otherwise
     routineTimer.add(5.000000);
     // update component parameters for each repeat
-    quitting_intention_text.setText((cue_text + "\n\nTo what extent do your thoughts encourage or discourage you to smoke?"));
+    quitting_intention_text.setText((cue_text + "\n\nHow much would you encourage or discourage yourself to smoke in this situation?"));
     quitting_intention_rating.reset()
     quitting_intention_keyboard.keys = undefined;
     quitting_intention_keyboard.rt = undefined;
