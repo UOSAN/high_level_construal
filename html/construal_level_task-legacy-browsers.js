@@ -879,7 +879,7 @@ function actionRoutineBegin(snapshot) {
     if ((condition_type === "present")) {
         attention_check_text = "How often do you engage in this action\nRIGHT NOW?";
     } else {
-        attention_check_text = "How likely would you engage in this action\nFIVE YEARS FROM NOW?";
+        attention_check_text = "How often would you engage in this action\nFIVE YEARS FROM NOW?";
     }
     
     action_text.setText(action);

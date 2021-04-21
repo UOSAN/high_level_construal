@@ -566,7 +566,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                 if thisBlock['condition_type'] == 'present':
                     attention_check_text = 'How often do you engage in this action\nRIGHT NOW?'
                 else:
-                    attention_check_text = 'How likely would you engage in this action\nFIVE YEARS FROM NOW?'
+                    attention_check_text = 'How often would you engage in this action\nFIVE YEARS FROM NOW?'
                 action_text.setText(thisAction_trial['action'])
                 attention_check.setText(attention_check_text)
                 attention_check_rating.reset()
