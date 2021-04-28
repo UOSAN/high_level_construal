@@ -119,7 +119,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
         conditions_file_name = os.path.join('conditions', 'choose_condition_practice.csv')
         scenario_trials_selection = [0]
         action_trials_selection = [0, 1, 2]
-        start_text_str = 'Practice for construal level task'
+        start_text_str = 'Practice for the scenario task'
 
     # Initialize components for Routine "instructions"
     instructionsClock = core.Clock()
