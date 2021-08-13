@@ -51,8 +51,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
     :param is_first: True if the first run in a block, False if not
     :return: None
     """
-    conditions_file_name = os.path.join('conditions', 'choose_condition.csv')
-    is_first = False
+    conditions_file_name = os.path.join('conditions', 'choose_condition.csv'
 
     if is_first:
         start_text_str = 'Calibrating scanner'
