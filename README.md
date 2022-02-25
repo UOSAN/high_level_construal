@@ -1,4 +1,5 @@
 # High level construal task
+**IMPORTANT**: The `construal_level_task.py` script has been edited directly. These changes _will not_ show up in the PsychoPy builder if you open `construal_level_task.psyexp` as that file does not contain those changes. These two files are now essentially two _different_ tasks.  
 
 ## Introduction
 
