@@ -414,7 +414,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                 win.timeOnFlip(key_resp, 'tStopRefresh')  # time at next scr refresh
                 key_resp.status = FINISHED
         if key_resp.status == STARTED and not waitOnFlip:
-            theseKeys = key_resp.getKeys(keyList=['apostrophe'], waitRelease=False)
+            theseKeys = key_resp.getKeys(keyList=['apostrophe', 'pound'], waitRelease=False)
             _key_resp_allKeys.extend(theseKeys)
             if len(_key_resp_allKeys):
                 key_resp.keys = _key_resp_allKeys[-1].name  # just the last key pressed
