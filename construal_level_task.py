@@ -26,15 +26,11 @@ from numpy.random import random, randint, normal, shuffle, choice as randchoice
 import os  # handy system and path functions
 import sys  # to get file system encoding
 import argparse
+import platform
 
 from psychopy.hardware import keyboard
 
 rating_keys = ['5', '6', '7', '8', '9']
-
-rng = np.random.default_rng()
-scenario_trial_indices = rng.permutation(np.arange(16))
-action_trial_indices = rng.permutation(np.arange(48)).reshape(16,3)
-
 
 def convert_key_to_rating(key):
     rating = None
@@ -55,6 +51,15 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
     :param is_first: True if the first run in a block, False if not
     :return: None
     """
+    if 'Windows' in platform.platform():
+        font2 = 'Arial'
+    else:
+        font2 = 'Helvetica'
+    
+    rng = np.random.default_rng()
+    scenario_trial_indices = rng.permutation(np.arange(16))
+    action_trial_indices = rng.permutation(np.arange(48)).reshape(16,3)
+
     conditions_file_name = os.path.join('conditions', 'choose_condition.csv')
 
     if is_first:
@@ -120,8 +125,6 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
     # session 0 is a practice session
     if expInfo['session'] == '0':
         conditions_file_name = os.path.join('conditions', 'choose_condition_practice.csv')
-        scenario_trials_selection = [0]
-        action_trials_selection = [0, 1, 2]
         start_text_str = 'Practice for the scenario task'
 
     # Initialize components for Routine "instructions"
@@ -135,7 +138,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                                  depth=0.0);
     instruction = visual.TextStim(win=win, name='instruction',
                                   text=start_text_str,
-                                  font='Helvetica',
+                                  font=font2,
                                   pos=(0, 0), height=0.05, wrapWidth=None, ori=0,
                                   color='white', colorSpace='rgb', opacity=1,
                                   languageStyle='LTR',
@@ -149,21 +152,21 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
     actionClock = core.Clock()
     cue_str = visual.TextStim(win=win, name='cue_str',
                               text='',
-                              font='Helvetica',
+                              font=font2,
                               pos=(0, 0), height=0.05, wrapWidth=None, ori=0.0,
                               color='white', colorSpace='rgb', opacity=None,
                               languageStyle='LTR',
                               depth=-1.0);
     action_text = visual.TextStim(win=win, name='action_text',
                                   text='',
-                                  font='Helvetica',
+                                  font=font2,
                                   pos=(0, 0.25), height=0.05, wrapWidth=None, ori=0,
                                   color='white', colorSpace='rgb', opacity=1,
                                   languageStyle='LTR',
                                   depth=-2.0);
     attention_check = visual.TextStim(win=win, name='attention_check',
                                       text='',
-                                      font='Helvetica',
+                                      font=font2,
                                       pos=(0, 0), height=0.05, wrapWidth=None, ori=0,
                                       color='white', colorSpace='rgb', opacity=1,
                                       languageStyle='LTR',
@@ -175,7 +178,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                                            granularity=0,
                                            style='rating', styleTweaks=('triangleMarker',), opacity=1,
                                            color='LightGray', fillColor='Red', borderColor='White', colorSpace='rgb',
-                                           font='Helvetica', labelHeight=0.03,
+                                           font=font2, labelHeight=0.03,
                                            flip=False, depth=-4, readOnly=False)
     attention_check_keyboard = keyboard.Keyboard()
 
@@ -183,7 +186,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
     scenario_cueClock = core.Clock()
     scenario_cue_text = visual.TextStim(win=win, name='scenario_cue_text',
                                         text='',
-                                        font='Helvetica',
+                                        font=font2,
                                         pos=(0, 0), height=0.05, wrapWidth=None, ori=0,
                                         color='white', colorSpace='rgb', opacity=1,
                                         languageStyle='LTR',
@@ -193,7 +196,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
     scenario1Clock = core.Clock()
     block1_text = visual.TextStim(win=win, name='block1_text',
                                   text='',
-                                  font='Helvetica',
+                                  font=font2,
                                   pos=(0, 0), height=0.05, wrapWidth=None, ori=0,
                                   color='white', colorSpace='rgb', opacity=1,
                                   languageStyle='LTR',
@@ -206,7 +209,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
     scenario2Clock = core.Clock()
     block2_text = visual.TextStim(win=win, name='block2_text',
                                   text='',
-                                  font='Helvetica',
+                                  font=font2,
                                   pos=(0, 0), height=0.05, wrapWidth=None, ori=0,
                                   color='white', colorSpace='rgb', opacity=1,
                                   languageStyle='LTR',
@@ -219,7 +222,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
     scenario3Clock = core.Clock()
     block3_text = visual.TextStim(win=win, name='block3_text',
                                   text='',
-                                  font='Helvetica',
+                                  font=font2,
                                   pos=(0, 0), height=0.05, wrapWidth=None, ori=0,
                                   color='white', colorSpace='rgb', opacity=1,
                                   languageStyle='LTR',
@@ -232,7 +235,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
     quitting_intentionClock = core.Clock()
     quitting_intention_text = visual.TextStim(win=win, name='quitting_intention_text',
                                               text='',
-                                              font='Helvetica',
+                                              font=font2,
                                               pos=(0, 0.2), height=0.05, wrapWidth=None, ori=0,
                                               color='white', colorSpace='rgb', opacity=1,
                                               languageStyle='LTR',
@@ -244,7 +247,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                                                       'discourage\na great deal'], ticks=(1, 2, 3, 4, 5), granularity=0,
                                               style='rating', styleTweaks=('triangleMarker',), opacity=1,
                                               color='LightGray', fillColor='Red', borderColor='White', colorSpace='rgb',
-                                              font='Helvetica', labelHeight=0.03,
+                                              font=font2, labelHeight=0.03,
                                               flip=False, depth=-2, readOnly=False)
     quitting_intention_keyboard = keyboard.Keyboard()
 
@@ -252,7 +255,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
     endClock = core.Clock()
     end_text = visual.TextStim(win=win, name='end_text',
                                text=end_text_str,
-                               font='Helvetica',
+                               font=font2,
                                pos=(0, 0), height=0.075, wrapWidth=None, ori=0.0,
                                color='white', colorSpace='rgb', opacity=None,
                                languageStyle='LTR',
