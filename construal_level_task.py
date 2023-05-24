@@ -55,7 +55,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
 
     if is_first:
         start_text_str = 'Calibrating scanner'
-        start_text_duration = 120
+        start_text_duration = 3600
         end_text_str = 'The task has ended. The next task will start in a few seconds.'
         end_text_duration = 10
     else:
