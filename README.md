@@ -8,11 +8,17 @@ This task is used in the Rethink Smoking study.
 
 - Conditions: present or future.
 - Block structure: Introduction text (20s). Then cue text (1s) and action text that requires a rating response (5s), repeated 3 times. Followed by cue text (1s), then a scenario (30s) that is displayed in text and audio, followed by a rating response of future quitting intention. 74s per block.
-- Duration: 8 blocks = 592s total.
+- Duration: 4 blocks = 296s total.
 
 ## How to run the task
 
-The task is run using [PsychoPy](https://www.psychopy.org/). Fill in the participant identifier, the session number and the run number. Session 0 is a brief practice run, session 1 and 2 with runs 1, 2, 3 or 4 are in-scanner runs. The task will start automatically after that.
+Do NOT use the builder version. The up-to-date code is in construal_level_task.py. Run using task_runner, or in python:
+```
+from construal_level_task import clt
+clt(subject, session, run, True)
+```
+
+OUT OF DATE: The task is run using [PsychoPy](https://www.psychopy.org/). Fill in the participant identifier, the session number and the run number. Session 0 is a brief practice run, session 1 and 2 with runs 1, 2, 3 or 4 are in-scanner runs. The task will start automatically after that.
 
 ## Task description
 
