@@ -31,6 +31,10 @@ from psychopy.hardware import keyboard
 
 rating_keys = ['5', '6', '7', '8', '9']
 
+rng = np.random.default_rng()
+scenario_trial_indices = rng.permutation(np.arange(16))
+action_trial_indices = rng.permutation(np.arange(48)).reshape(16,3)
+
 
 def convert_key_to_rating(key):
     rating = None
@@ -441,8 +445,8 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
         # ------Prepare to start Routine "block_setup"-------
         continueRoutine = True
         # update component parameters for each repeat
-        scenario_trials_selection = randint(low=0, high=15, size=1)
-        action_trials_selection = randint(low=0, high=47, size=3)
+        scenario_trials_selection = [scenario_trial_indices[currentLoop.thisN]]
+        action_trials_selection = action_trial_indices[currentLoop.thisN]
         # keep track of which components have finished
         block_setupComponents = []
         for thisComponent in block_setupComponents:
@@ -501,7 +505,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
         for thisScenario_trial in scenario_trials:
             currentLoop = scenario_trials
             # set up handler to look after randomisation of conditions etc
-            action_trials = data.TrialHandler(nReps=1, method='random',
+            action_trials = data.TrialHandler(nReps=1, method='sequential',
                                               extraInfo=expInfo, originPath=-1,
                                               trialList=data.importConditions('conditions/action_conditions.csv',
                                                                               selection=action_trials_selection),
