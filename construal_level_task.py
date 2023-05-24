@@ -27,6 +27,7 @@ import os  # handy system and path functions
 import sys  # to get file system encoding
 import argparse
 import platform
+import pathlib
 
 from psychopy.hardware import keyboard
 
@@ -55,9 +56,9 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
         font2 = 'Arial'
     else:
         font2 = 'Helvetica'
-    
+
+    # Randomize actions for this run
     rng = np.random.default_rng()
-    scenario_trial_indices = rng.permutation(np.arange(16))
     action_trial_indices = rng.permutation(np.arange(48)).reshape(16,3)
 
     conditions_file_name = os.path.join('conditions', 'choose_condition.csv')
@@ -76,6 +77,17 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
     # Ensure that relative paths start from the same directory as this script
     _thisDir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(_thisDir)
+
+    # Create or retrieve randomized scenarios
+    scenarios_indices_file = pathlib.Path(_thisDir, 'scenarios', f'{participant_id}-{session}.txt')
+    if scenarios_indices_file.exists():
+        future_indices, present_indices = np.loadtxt(scenarios_indices_file, dtype='int')
+    else:
+        scenarios_indices_file.parent.mkdir(exist_ok=True)
+        future_indices = rng.permutation(np.arange(16))
+        present_indices = rng.permutation(np.arange(16))
+        np.savetxt(scenarios_indices_file, [future_indices, present_indices], fmt='%d')
+
 
     # Store info about the experiment session
     psychopyVersion = '2021.1.2'
@@ -442,13 +454,26 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                               seed=None, name='block')
     thisExp.addLoop(block)  # add the loop to the experiment
 
+    # starting index for scenarios
+    # Assumes equal number of present & future in each run
+    present_index = int((int(run_number)-1)*block.nTotal/2)
+    future_index = int((int(run_number)-1)*block.nTotal/2)
+
     for thisBlock in block:
         currentLoop = block
 
         # ------Prepare to start Routine "block_setup"-------
         continueRoutine = True
+
         # update component parameters for each repeat
-        scenario_trials_selection = [scenario_trial_indices[currentLoop.thisN]]
+
+        if thisBlock['condition_type'] == 'present':
+            scenario_trials_selection = [present_indices[present_index]]
+            present_index = present_index + 1
+        else:
+            scenario_trials_selection = [future_indices[future_index]]
+            future_index = future_index + 1
+
         action_trials_selection = action_trial_indices[currentLoop.thisN]
         # keep track of which components have finished
         block_setupComponents = []
@@ -459,12 +484,13 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
             thisComponent.tStopRefresh = None
             if hasattr(thisComponent, 'status'):
                 thisComponent.status = NOT_STARTED
+        
         # reset timers
         t = 0
         _timeToFirstFrame = win.getFutureFlipTime(clock="now")
         block_setupClock.reset(-_timeToFirstFrame)  # t0 is time of first possible flip
         frameN = -1
-
+        
         # -------Run Routine "block_setup"-------
         while continueRoutine:
             # get current time
@@ -473,7 +499,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
             tThisFlipGlobal = win.getFutureFlipTime(clock=None)
             frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
             # update/draw components on each frame
-
+            
             # check for quit (typically the Esc key)
             if endExpNow or defaultKeyboard.getKeys(keyList=["escape"]):
                 core.quit()
@@ -486,25 +512,27 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                 if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
                     continueRoutine = True
                     break  # at least one component has not yet finished
-
+            
             # refresh the screen
             if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
                 win.flip()
-
+        
         # -------Ending Routine "block_setup"-------
         for thisComponent in block_setupComponents:
             if hasattr(thisComponent, "setAutoDraw"):
                 thisComponent.setAutoDraw(False)
         # the Routine "block_setup" was not non-slip safe, so reset the non-slip timer
         routineTimer.reset()
-
+        
         # set up handler to look after randomisation of conditions etc
         scenario_trials = data.TrialHandler(nReps=1, method='sequential',
                                             extraInfo=expInfo, originPath=-1,
                                             trialList=data.importConditions(thisBlock['scenario_file'],
                                                                             selection=scenario_trials_selection),
                                             seed=None, name='scenario_trials')
+        
         thisExp.addLoop(scenario_trials)  # add the loop to the experiment
+        
         for thisScenario_trial in scenario_trials:
             currentLoop = scenario_trials
             # set up handler to look after randomisation of conditions etc
@@ -521,7 +549,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                 if thisAction_trial != None:
                     for paramName in thisAction_trial:
                         exec('{} = thisAction_trial[paramName]'.format(paramName))
-
+                
                 # ------Prepare to start Routine "action"-------
                 continueRoutine = True
                 routineTimer.add(9.000000)
@@ -530,7 +558,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                     attention_check_text = 'How often do you engage in this action\nRIGHT NOW?'
                 else:
                     attention_check_text = 'How often would you engage in this action\nFIVE YEARS FROM NOW?'
-
+                
                 cue_str.setText("Please imagine the next events occurring " + thisBlock['cue_text'])
                 action_text.setText(thisAction_trial['action'])
                 attention_check.setText(attention_check_text)
@@ -538,6 +566,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                 attention_check_keyboard.keys = []
                 attention_check_keyboard.rt = []
                 _attention_check_keyboard_allKeys = []
+                
                 # keep track of which components have finished
                 actionComponents = [cue_str, action_text, attention_check, attention_check_rating,
                                     attention_check_keyboard]
@@ -553,7 +582,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                 _timeToFirstFrame = win.getFutureFlipTime(clock="now")
                 actionClock.reset(-_timeToFirstFrame)  # t0 is time of first possible flip
                 frameN = -1
-
+                
                 # -------Run Routine "action"-------
                 while continueRoutine and routineTimer.getTime() > 0:
                     # get current time
@@ -568,7 +597,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                     attention_check_rating.markerPos = r
                     # confirm rating by setting to current markerPos
                     attention_check_rating.rating = r
-
+                    
                     # *cue_str* updates
                     if cue_str.status == NOT_STARTED and tThisFlip >= 0.0 - frameTolerance:
                         # keep track of start time/frame for later
@@ -585,7 +614,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                             cue_str.frameNStop = frameN  # exact frame index
                             win.timeOnFlip(cue_str, 'tStopRefresh')  # time at next scr refresh
                             cue_str.setAutoDraw(False)
-
+                    
                     # *action_text* updates
                     if action_text.status == NOT_STARTED and tThisFlip >= 4 - frameTolerance:
                         # keep track of start time/frame for later
@@ -602,7 +631,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                             action_text.frameNStop = frameN  # exact frame index
                             win.timeOnFlip(action_text, 'tStopRefresh')  # time at next scr refresh
                             action_text.setAutoDraw(False)
-
+                    
                     # *attention_check* updates
                     if attention_check.status == NOT_STARTED and tThisFlip >= 4 - frameTolerance:
                         # keep track of start time/frame for later
@@ -619,7 +648,7 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
                             attention_check.frameNStop = frameN  # exact frame index
                             win.timeOnFlip(attention_check, 'tStopRefresh')  # time at next scr refresh
                             attention_check.setAutoDraw(False)
-
+                    
                     # *attention_check_rating* updates
                     if attention_check_rating.status == NOT_STARTED and tThisFlip >= 4 - frameTolerance:
                         # keep track of start time/frame for later
