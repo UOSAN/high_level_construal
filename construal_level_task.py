@@ -81,12 +81,11 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
     # Create or retrieve randomized scenarios
     scenarios_indices_file = pathlib.Path(_thisDir, 'scenarios', f'{participant_id}-{session}.txt')
     if scenarios_indices_file.exists():
-        future_indices, present_indices = np.loadtxt(scenarios_indices_file, dtype='int')
+        scenario_indices = np.loadtxt(scenarios_indices_file, dtype='int')
     else:
         scenarios_indices_file.parent.mkdir(exist_ok=True)
-        future_indices = rng.permutation(np.arange(16))
-        present_indices = rng.permutation(np.arange(16))
-        np.savetxt(scenarios_indices_file, [future_indices, present_indices], fmt='%d')
+        scenario_indices = rng.permutation(np.arange(16))
+        np.savetxt(scenarios_indices_file, scenario_indices, fmt='%d')
 
 
     # Store info about the experiment session
@@ -455,7 +454,6 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
     thisExp.addLoop(block)  # add the loop to the experiment
 
     # starting index for scenarios
-    # Assumes equal number of present & future in each run
     present_index = int((int(run_number)-1)*block.nTotal/2)
     future_index = int((int(run_number)-1)*block.nTotal/2)
 
@@ -466,15 +464,11 @@ def clt(participant_id: str, session: str, run_number: str, is_first: bool):
         continueRoutine = True
 
         # update component parameters for each repeat
-
-        if thisBlock['condition_type'] == 'present':
-            scenario_trials_selection = [present_indices[present_index]]
-            present_index = present_index + 1
-        else:
-            scenario_trials_selection = [future_indices[future_index]]
-            future_index = future_index + 1
-
+        scene_index = (int(run_number)-1)*currentLoop.nTotal + currentLoop.thisN
+        scenario_trials_selection = [scenario_indices[scene_index]]
+        print(f'scenario: {scenario_trials_selection}')
         action_trials_selection = action_trial_indices[currentLoop.thisN]
+
         # keep track of which components have finished
         block_setupComponents = []
         for thisComponent in block_setupComponents:
